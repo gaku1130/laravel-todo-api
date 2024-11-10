@@ -1,0 +1,916 @@
+openapi: 3.1.0
+info:
+  version: 1.0.0
+  title: User TODO LIST API
+  description: >-
+    ユーザーが自分のTodoを登録、更新、検索、削除をするためのAPI用のSwagger
+servers:
+  - url: http://{host}:{port}/api/v1
+    description: 開発用
+    variables:
+      host:
+        default: localhost
+      port:
+        default: "8003"
+  - url: https://example.com/api/v1
+    description: プロダクション API
+paths:
+  /auth/register:
+    post:
+      tags:
+        - Authentication
+      description: >
+        register user
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: user name
+                email:
+                  type: string
+                  description: email
+                  format: email
+                password:
+                  type: string
+                  description: password
+                confirmPassword:
+                  type: string
+                  description: 確認用password
+              required:
+                - name
+                - email
+                - password
+                - confirmPassword
+            example:
+              name: "Taro"
+              email: "test@gmail.com"
+              password: "test123"
+              confirmPassword: "test123"
+      responses:
+        "201":
+          description: register user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisterResponse"
+              example:
+                status: 201
+                data:
+                  userId: 1
+                  accessToken: "1|I45nb5Du2DzUYmYi38lUB3b8xxxxxxxxxxxx"
+        "400":
+          description: Request Parameter Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Error"
+              example:
+                error:
+                  code: 400
+                  message: "Request Parameter Error"
+                  details: "The 'email' field must be a valid email address."
+        "500":
+          description: Backend Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Error"
+              example:
+                error:
+                  code: 500
+                  message: "Server Error"
+                  details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      description: >
+        login
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: email
+                  format: email
+                password:
+                  type: string
+                  description: password
+              required:
+                - email
+                - password
+            example:
+              email: "test@gmail.com"
+              password: "test123"
+      responses:
+        "200":
+          description: login success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisterResponse"
+              example:
+                status: 200
+                data:
+                  userId: 1
+                  accessToken: "1|I45nb5Du2DzUYmYi38lUB3b8xxxxxxxxxxxx"
+        "400":
+          description: Request Parameter Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Error"
+              example:
+                error:
+                  code: 400
+                  message: "Request Parameter Error"
+                  details: "The 'email' field must be a valid email address."
+        "500":
+          description: Backend Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Error"
+              example:
+                error:
+                  code: 500
+                  message: "Server Error"
+                  details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
+  /auth/logout:
+    post:
+      tags:
+        - Authentication
+      description: >
+        logout
+      operationId: logout
+      security:
+        - BearerAuth: []
+      responses:
+        "204":
+          description: successfully logout
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/204Response"
+              example:
+                message: "successfully logout"
+        "401":
+          description: Authorization Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/401Error"
+              example:
+                error:
+                  code: 401
+                  message: "Authorization Error"
+                  details: "User authentication failed. Please check your credentials and try again."
+        "500":
+          description: Backend Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Error"
+              example:
+                error:
+                  code: 500
+                  message: "Server Error"
+                  details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
+  /users:
+    get:
+      tags:
+        - User
+      description: >
+        Returns all users
+      operationId: findUsers
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: user response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+              example:
+                - id: 100
+                  name: "Taro"
+                  email: "example0000@yahoo.co.jp"
+                - id: 101
+                  name: "Jiro"
+                  email: "example1111@yahoo.co.jp"
+        "401":
+          description: Authorization Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/401Error"
+              example:
+                error:
+                  code: 401
+                  message: "Authorization Error"
+                  details: "User authentication failed. Please check your credentials and try again."
+        "500":
+          description: Backend Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Error"
+              example:
+                error:
+                  code: 500
+                  message: "Server Error"
+                  details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
+  /users/{userId}:
+    get:
+      tags:
+        - User
+      description: >
+        Returns user
+      operationId: findUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The ID of the user
+          schema:
+            type: integer
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: User response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+              example:
+                id: 100
+                name: "Taro"
+                email: "example0000@yahoo.co.jp"
+        "401":
+          description: Authorization Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/401Error"
+              example:
+                error:
+                  code: 401
+                  message: "Authorization Error"
+                  details: "User authentication failed. Please check your credentials and try again."
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/403Error"
+              example:
+                error:
+                  code: 403
+                  message: "Forbidden"
+                  details: "You do not have permission to access this todo resource."
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/404Error"
+              example:
+                error:
+                  code: 404
+                  message: "Not Found"
+                  details: "The requested user resource was not found on the server."
+        "500":
+          description: Backend Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Error"
+              example:
+                error:
+                  code: 500
+                  message: "Server Error"
+                  details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
+  /users/{userId}/todos:
+    get:
+      tags:
+        - Todo
+      description: >
+        Returns todos for a specific user by ID
+      operationId: findUserTodos
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The ID of the user
+          schema:
+            type: integer
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Successful response with user todos
+          content:
+            application/json:
+              schema:
+                type: array
+                properties:
+                  items:
+                    $ref: "#/components/schemas/Todo"
+              example:
+                - id: 1
+                  title: "Sample Todo 1"
+                  completed: false
+                - id: 2
+                  title: "Sample Todo 2"
+                  completed: true
+        "401":
+          description: Authorization Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/401Error"
+              example:
+                error:
+                  code: 401
+                  message: "Authorization Error"
+                  details: "User authentication failed. Please check your credentials and try again."
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/403Error"
+              example:
+                error:
+                  code: 403
+                  message: "Forbidden"
+                  details: "You do not have permission to access this todo resource."
+        "500":
+          description: Backend Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Error"
+              example:
+                error:
+                  code: 500
+                  message: "Server Error"
+                  details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
+    post:
+      tags:
+        - Todo
+      description: >
+        create todo for a specific user by ID
+      operationId: createUserTodo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the user
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  description: The content of the todo item
+              required:
+                - content
+            example:
+              content: "Buy groceries"
+      security:
+        - BearerAuth: []
+      responses:
+        "201":
+          description: Successful response with user todos created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/201Response"
+              example:
+                message: "Successful create user todo"
+        "400":
+          description: Request Parameter Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Error"
+              example:
+                error:
+                  code: 400
+                  message: "Request Parameter Error"
+                  details: "The 'email' field must be a valid email address."
+        "401":
+          description: Authorization Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/401Error"
+              example:
+                error:
+                  code: 401
+                  message: "Authorization Error"
+                  details: "User authentication failed. Please check your credentials and try again."
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/403Error"
+              example:
+                error:
+                  code: 403
+                  message: "Forbidden"
+                  details: "You do not have permission to access this todo resource."
+        "500":
+          description: Backend Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Error"
+              example:
+                error:
+                  code: 500
+                  message: "Server Error"
+                  details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
+  /users/{userId}/todos/{todoId}:
+    get:
+      tags:
+        - Todo
+      description: >
+        Retrieves a specific todo for a user by user ID and todo ID
+      operationId: getUserTodo
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The ID of the user
+          schema:
+            type: integer
+        - name: todoId
+          in: path
+          required: true
+          description: The ID of the todo
+          schema:
+            type: integer
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Successful response with the specific todo
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Todo"
+              example:
+                id: 1
+                title: "Sample Todo 1"
+                completed: false
+        "401":
+          description: Authorization Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/401Error"
+              example:
+                error:
+                  code: 401
+                  message: "Authorization Error"
+                  details: "User authentication failed. Please check your credentials and try again."
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/403Error"
+              example:
+                error:
+                  code: 403
+                  message: "Forbidden"
+                  details: "You do not have permission to access this todo resource."
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/404Error"
+              example:
+                error:
+                  code: 404
+                  message: "Not Found"
+                  details: "The requested todo resource was not found on the server."
+        "500":
+          description: Backend Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Error"
+              example:
+                error:
+                  code: 500
+                  message: "Server Error"
+                  details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
+    put:
+      tags:
+        - Todo
+      description: >
+        Updates a specific todo for a user by user ID and todo ID
+      operationId: updateUserTodo
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The ID of the user
+          schema:
+            type: integer
+        - name: todoId
+          in: path
+          required: true
+          description: The ID of the todo
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: The title of the todo
+                completed:
+                  type: boolean
+                  description: Completion status of the todo
+              required:
+                - title
+            example:
+              title: "Updated Todo Title"
+              completed: true
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Successful update of the specific todo
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Todo"
+              example:
+                id: 1
+                title: "Sample Todo 1"
+                completed: true
+        "400":
+          description: Request Parameter Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Error"
+              example:
+                error:
+                  code: 400
+                  message: "Request Parameter Error"
+                  details: "The 'email' field must be a valid email address."
+        "401":
+          description: Authorization Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/401Error"
+              example:
+                error:
+                  code: 401
+                  message: "Authorization Error"
+                  details: "User authentication failed. Please check your credentials and try again."
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/403Error"
+              example:
+                error:
+                  code: 403
+                  message: "Forbidden"
+                  details: "You do not have permission to access this todo resource."
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/404Error"
+              example:
+                error:
+                  code: 404
+                  message: "Not Found"
+                  details: "The requested todo resource was not found on the server."
+        "500":
+          description: Backend Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Error"
+              example:
+                error:
+                  code: 500
+                  message: "Server Error"
+                  details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
+    delete:
+      tags:
+        - Todo
+      description: >
+        Deletes a specific todo for a user by user ID and todo ID
+      operationId: deleteUserTodo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the user
+          schema:
+            type: integer
+        - name: todoId
+          in: path
+          required: true
+          description: The ID of the todo
+          schema:
+            type: integer
+      security:
+        - BearerAuth: []
+      responses:
+        "204":
+          description: successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/204Response"
+              example:
+                message: "successfully deleted"
+        "400":
+          description: Request Parameter Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Error"
+              example:
+                error:
+                  code: 400
+                  message: "Request Parameter Error"
+                  details: "The 'email' field must be a valid email address."
+        "401":
+          description: Authorization Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/401Error"
+              example:
+                error:
+                  code: 401
+                  message: "Authorization Error"
+                  details: "User authentication failed. Please check your credentials and try again."
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/403Error"
+              example:
+                error:
+                  code: 403
+                  message: "Forbidden"
+                  details: "You do not have permission to access this todo resource."
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/404Error"
+              example:
+                error:
+                  code: 404
+                  message: "Not Found"
+                  details: "The requested todo resource was not found on the server."
+        "500":
+          description: Backend Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Error"
+              example:
+                error:
+                  code: 500
+                  message: "Server Error"
+                  details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: "Personal Access Token"
+  schemas:
+    RegisterResponse:
+      type: "object"
+      required:
+        - "accessToken"
+        - "userId"
+      properties:
+        accessToken:
+          type: "string"
+          description: "アクセストークン"
+          example: "1|I45nb5Du2DzUYmYi38lUB3b8xxxxxxxxxxxx"
+        userId:
+          type: "integer"
+          format: "int64"
+          example: 1
+    User:
+      type: "object"
+      required:
+        - "id"
+        - "name"
+        - "email"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+          example: 100
+        name:
+          type: "string"
+          description: "ユーザー名"
+          example: "Taro"
+        email:
+          type: "string"
+          description: "登録時に利用するメールアドレス"
+          example: "example0000@yahoo.co.jp"
+    Todo:
+      type: "object"
+      required:
+        - "id"
+        - "userId"
+        - "content"
+        - "completed"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+          example: 1
+        userId:
+          type: "integer"
+          format: "int64"
+          example: 100
+        content:
+          type: "string"
+          description: "ユーザー名"
+          example: "Taro"
+        completed:
+          type: "boolean"
+          description: "todo status"
+          example: true
+    201Response:
+      type: "object"
+      required:
+        - "message"
+      properties:
+        message:
+          type: "string"
+          example: "Successful crete user todo"
+    204Response:
+      type: "object"
+      required:
+        - "message"
+      properties:
+        message:
+          type: "string"
+          example: "Successfully deleted"
+    400Error:
+      type: "object"
+      required:
+        - "error"
+      properties:
+        error:
+          type: "object"
+          required:
+            - "code"
+            - "message"
+            - "details"
+          properties:
+            code:
+              type: "integer"
+              format: "int32"
+              example: 400
+            message:
+              type: "string"
+              example: "Request Parameter Error"
+            details:
+              type: "string"
+              example: "The 'email' field must be a valid email address."
+    401Error:
+      type: "object"
+      required:
+        - "error"
+      properties:
+        error:
+          type: "object"
+          required:
+            - "code"
+            - "message"
+            - "details"
+          properties:
+            code:
+              type: "integer"
+              format: "int32"
+              example: 401
+            message:
+              type: "string"
+              example: "Authorization Error"
+            details:
+              type: "string"
+              example: "User authentication failed. Please check your credentials and try again."
+    403Error:
+      type: "object"
+      required:
+        - "error"
+      properties:
+        error:
+          type: "object"
+          required:
+            - "code"
+            - "message"
+            - "details"
+          properties:
+            code:
+              type: "integer"
+              format: "int32"
+              example: 403
+            message:
+              type: "string"
+              example: "Forbidden"
+            details:
+              type: "string"
+              example: "You do not have permission to access this todo resource."
+    404Error:
+      type: "object"
+      required:
+        - "error"
+      properties:
+        error:
+          type: "object"
+          required:
+            - "code"
+            - "message"
+            - "details"
+          properties:
+            code:
+              type: "integer"
+              format: "int32"
+              example: 404
+            message:
+              type: "string"
+              example: "Not Found"
+            details:
+              type: "string"
+              example: "The requested resource was not found on the server."
+    500Error:
+      type: "object"
+      required:
+        - "error"
+      properties:
+        error:
+          type: "object"
+          required:
+            - "code"
+            - "message"
+            - "details"
+          properties:
+            code:
+              type: "integer"
+              format: "int32"
+              example: 500
+            message:
+              type: "string"
+              example: "Server Error"
+            details:
+              type: "string"
+              example: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
+
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
