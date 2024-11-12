@@ -11,7 +11,7 @@ servers:
       host:
         default: localhost
       port:
-        default: "8003"
+        default: "8002"
   - url: https://example.com/api/v1
     description: プロダクション API
 paths:
