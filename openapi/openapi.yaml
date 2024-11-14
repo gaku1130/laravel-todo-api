@@ -12,7 +12,7 @@ servers:
         default: localhost
       port:
         default: "8002"
-  - url: https://example.com/api/v1
+  - url: https://gaku-portfolio.com/api/v1
     description: プロダクション API
 paths:
   /auth/register:
@@ -157,7 +157,7 @@ paths:
       security:
         - BearerAuth: []
       responses:
-        "204":
+        "200":
           description: successfully logout
           content:
             application/json:
@@ -657,7 +657,7 @@ paths:
       security:
         - BearerAuth: []
       responses:
-        "204":
+        "200":
           description: successfully deleted
           content:
             application/json:
@@ -792,7 +792,7 @@ components:
         message:
           type: "string"
           example: "Successful crete user todo"
-    204Response:
+    200Response:
       type: "object"
       required:
         - "message"
