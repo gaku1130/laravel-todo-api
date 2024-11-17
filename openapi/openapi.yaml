@@ -378,7 +378,7 @@ paths:
         create todo for a specific user by ID
       operationId: createUserTodo
       parameters:
-        - name: id
+        - name: userId
           in: path
           required: true
           description: The ID of the user
@@ -642,7 +642,7 @@ paths:
         Deletes a specific todo for a user by user ID and todo ID
       operationId: deleteUserTodo
       parameters:
-        - name: id
+        - name: userId
           in: path
           required: true
           description: The ID of the user
