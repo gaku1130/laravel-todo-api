@@ -2,12 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Http\Request;
+use App\Models\Account;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+
+    public function register(Request $request)
+    {
+
+
+
+
+        
+    }
+
     public function login(Request $request)
     {
         try{
@@ -38,10 +49,10 @@ class AuthController extends Controller
                     'details' => 'An unexpected error occurred on the server. Please try again later or contact support if the issue persists.',
                 ],
             ], 500);
-            }
         }
     }
-}
+
+
 
     public function user(Request $request){
         return response()->json(
