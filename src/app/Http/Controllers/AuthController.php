@@ -99,17 +99,6 @@ class AuthController extends Controller
 
 
 
-    public function user(Request $request){
-        return response()->json(
-            [
-                $request->user()->name,
-                $request->user()->email,
-            ]
-        );
-    }
-
-
-
     public function logout(Request $request)
     {
         try {
