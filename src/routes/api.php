@@ -24,9 +24,7 @@ Route::post('auth/login', [AuthController::class, 'login'])->name('auth.login');
 Route::middleware('auth:sanctum')->post('auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/users/{userId}', [UserController::class, 'findUser'])->name('user.find');
-});
+Route::middleware('auth:sanctum')->get('/users/{userId}', [UserController::class, 'findUser'])->name('user.find');
 
 
 Route::middleware('auth:sanctum')->get('/users/{userId}/todos', [TodoController::class, 'index']);
