@@ -3,6 +3,11 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TodoController;
+use App\Http\Controllers\UserController;
+
+
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -13,7 +18,14 @@ use App\Http\Controllers\AuthController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
-Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
-Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
-Route::middleware('auth:sanctum')->get('/user', [AuthController::class, 'user'])->name('auth.user');
+
+Route::post('auth/register', [AuthController::class, 'register'])->name('auth.register');
+Route::post('auth/login', [AuthController::class, 'login'])->name('auth.login');
+Route::middleware('auth:sanctum')->post('auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
+
+
+Route::middleware('auth:sanctum')->get('/users/{userId}', [UserController::class, 'findUser'])->name('user.find');
+
+
+Route::middleware('auth:sanctum')->get('/users/{userId}/todos', [TodoController::class, 'index']);
+Route::middleware('auth:sanctum')->post('/users/{userId}/todos', [TodoController::class, 'store']);

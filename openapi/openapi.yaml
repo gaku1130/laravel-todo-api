@@ -187,53 +187,6 @@ paths:
                   code: 500
                   message: "Server Error"
                   details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
-  /users:
-    get:
-      tags:
-        - User
-      description: >
-        Returns all users
-      operationId: findUsers
-      security:
-        - BearerAuth: []
-      responses:
-        "200":
-          description: user response
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/User"
-              example:
-                - id: 100
-                  name: "Taro"
-                  email: "example0000@yahoo.co.jp"
-                - id: 101
-                  name: "Jiro"
-                  email: "example1111@yahoo.co.jp"
-        "401":
-          description: Authorization Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/401Error"
-              example:
-                error:
-                  code: 401
-                  message: "Authorization Error"
-                  details: "User authentication failed. Please check your credentials and try again."
-        "500":
-          description: Backend Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/500Error"
-              example:
-                error:
-                  code: 500
-                  message: "Server Error"
-                  details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
   /users/{userId}:
     get:
       tags:

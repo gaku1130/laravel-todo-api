@@ -19,8 +19,8 @@ class AuthController extends Controller
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users',
-                'password' => 'required|string|min:8|same:confirmPassword',
-                'confirmPassword' => 'required|string|min:8',
+                'password' => 'required|string|min:8',
+                'confirmPassword' => 'required|string|min:8|same:password',
             ]);
     
             if ($validator->fails()) {
@@ -95,17 +95,6 @@ class AuthController extends Controller
                 ],
             ], 500);
         }
-    }
-
-
-
-    public function user(Request $request){
-        return response()->json(
-            [
-                $request->user()->name,
-                $request->user()->email,
-            ]
-        );
     }
 
 
