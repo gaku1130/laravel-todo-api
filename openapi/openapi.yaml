@@ -286,10 +286,10 @@ paths:
                     $ref: "#/components/schemas/Todo"
               example:
                 - id: 1
-                  title: "Sample Todo 1"
+                  content: "Sample Todo 1"
                   completed: false
                 - id: 2
-                  title: "Sample Todo 2"
+                  content: "Sample Todo 2"
                   completed: true
         "401":
           description: Authorization Error
@@ -437,7 +437,7 @@ paths:
                 $ref: "#/components/schemas/Todo"
               example:
                 id: 1
-                title: "Sample Todo 1"
+                content: "Sample Todo 1"
                 completed: false
         "401":
           description: Authorization Error
@@ -509,16 +509,16 @@ paths:
             schema:
               type: object
               properties:
-                title:
+                content:
                   type: string
-                  description: The title of the todo
+                  description: The content of the todo
                 completed:
                   type: boolean
                   description: Completion status of the todo
               required:
-                - title
+                - content
             example:
-              title: "Updated Todo Title"
+              content: "Updated Todo Content"
               completed: true
       security:
         - BearerAuth: []
@@ -531,7 +531,7 @@ paths:
                 $ref: "#/components/schemas/Todo"
               example:
                 id: 1
-                title: "Sample Todo 1"
+                content: "Sample Todo 1"
                 completed: true
         "400":
           description: Request Parameter Error

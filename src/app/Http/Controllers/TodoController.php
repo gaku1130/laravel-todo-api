@@ -38,7 +38,7 @@ class TodoController extends Controller
         try {
             $this->authorizeUser($userId);
 
-            $todos = $this->todo->where('user_id', $userId)->get(['id', 'title', 'completed']);
+            $todos = $this->todo->where('user_id', $userId)->get(['id', 'content', 'completed']);
 
             return response()->json($todos, 200);
         } catch (\Exception $e) {

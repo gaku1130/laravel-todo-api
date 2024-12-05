@@ -27,5 +27,28 @@ Route::middleware('auth:sanctum')->post('auth/logout', [AuthController::class, '
 Route::middleware('auth:sanctum')->get('/users/{userId}', [UserController::class, 'findUser'])->name('user.find');
 
 
-Route::middleware('auth:sanctum')->get('/users/{userId}/todos', [TodoController::class, 'index']);
-Route::middleware('auth:sanctum')->post('/users/{userId}/todos', [TodoController::class, 'store']);
+Route::controller(TodoController::class)->group(function () {
+    Route::middleware(['auth:sanctum', 'check.userId'])->get('users/{userId}/todos', 'index');
+    Route::middleware(['auth:sanctum', 'check.userId'])->post('users/{userId}/todos', 'create');
+
+    Route::middleware([
+        'auth:sanctum',
+        'check.userId',
+        'find.todo',
+        'check.todoId',
+    ])->get('users/{userId}/todos/{todoId}', 'show');
+
+    Route::middleware([
+        'auth:sanctum',
+        'check.userId',
+        'find.todo',
+        'check.todoId',
+    ])->put('users/{userId}/todos/{todoId}', 'update');
+
+    Route::middleware([
+        'auth:sanctum',
+        'check.userId',
+        'find.todo',
+        'check.todoId',
+    ])->delete('users/{userId}/todos/{todoId}', 'destroy');
+});
