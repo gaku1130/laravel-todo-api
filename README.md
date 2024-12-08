@@ -89,7 +89,7 @@ curl -X POST https://www.gaku-portfolio.com/api/v1/auth/login \
 ```
 curl -X POST https://www.gaku-portfolio.com/api/v1/auth/logout \
 -H "Content-Type: application/json" \
--H "Authorization: Bearer [Access token]"
+-H "Authorization: Bearer HJEvYix5NmN1XRqbKzohU5nQ7kzMLYOdCppQPcQt29f9443f"
 ```
 
 - レスポンス
