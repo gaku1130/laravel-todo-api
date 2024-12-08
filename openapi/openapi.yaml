@@ -5,6 +5,8 @@ info:
   description: >-
     ユーザーが自分のTodoを登録、更新、検索、削除をするためのAPI用のSwagger
 servers:
+  - url: https://www.gaku-portfolio.com/api/v1
+    description: プロダクション API
   - url: http://{host}:{port}/api/v1
     description: 開発用
     variables:
@@ -12,8 +14,6 @@ servers:
         default: localhost
       port:
         default: "8002"
-  - url: https://gaku-portfolio.com/api/v1
-    description: プロダクション API
 paths:
   /auth/register:
     post:
