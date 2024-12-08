@@ -45,6 +45,9 @@ Laravel Sanctumを使用して以下の認証機能を実装予定です：
 ### Open API
 https://www.gaku-portfolio.com/swagger-ui/
 
+### Postman URL
+https://www.postman.com/todo-portfolio/workspace/portfolio
+
 ### ユーザー新規登録(emailが重複している場合は別のemailを利用する)
 
 - リクエスト
