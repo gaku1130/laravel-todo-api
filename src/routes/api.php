@@ -60,6 +60,6 @@ Route::prefix('v1')->group(function () {
             'check.userId',
             'find.todo',
             'check.todoId',
-        ])->destroy('users/{userId}/todos/{todoId}', 'delete');
+        ])->delete('users/{userId}/todos/{todoId}', 'destroy');
     });
 });
