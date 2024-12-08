@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API\V1\Todo;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController as BaseController;
@@ -85,8 +85,10 @@ class TodoController extends BaseController {
       $todo->complated = true;      
     }
   
+    // 更新処理
     $todo->save();
 
+     // 更新後のデータを返したいので取得
     $newTodo = $this->todo->find($todo->id);
 
     return $this->sendResponse('todo', $newTodo, 200);
@@ -101,6 +103,7 @@ class TodoController extends BaseController {
   {
     $request->todo->delete();
 
+    // responseにmessageを含めたいのでステータスコードを200とする。
     return $this->sendResponse(null, null, 200, 'Delete user`s todo successfully');
   }
 }

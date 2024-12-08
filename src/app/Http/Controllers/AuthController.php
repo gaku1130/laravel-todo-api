@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController as BaseController;
@@ -9,13 +9,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\JsonResponse;
 use App\Exceptions\CustomException;
 
-class LoginController extends BaseController {
+class AuthController extends BaseController {
   /**
    * Login api
    *
    * @return \Illuminate\Http\Response
    */
   public function login(Request $request): JsonResponse {
+    // ユーザーの認証情報（メールアドレスとパスワード）が正しいかを確認している。
     if (!Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
       throw new CustomException('Request Parameter Error', "The provided email or password is incorrect. Please check your credentials and try again", 400);
     }
