@@ -20,15 +20,15 @@ use App\Http\Controllers\UserController;
 */
 
 Route::prefix('v1')->group(function () {
-	Route::controller(RegisterController::class)->group(function () {
+	Route::controller(AuthController::class)->group(function () {
 		Route::post('auth/register', 'register');
 	});
 
-	Route::controller(LoginController::class)->group(function () {
+	Route::controller(AuthController::class)->group(function () {
 		Route::post('auth/login', 'login');
 	});
 
-	Route::controller(LogoutController::class)->group(function () {
+	Route::controller(AuthController::class)->group(function () {
 		Route::middleware('auth:sanctum')->post('auth/logout', 'logout');
 	});
 
@@ -60,6 +60,6 @@ Route::prefix('v1')->group(function () {
             'check.userId',
             'find.todo',
             'check.todoId',
-        ])->delete('users/{userId}/todos/{todoId}', 'delete');
+        ])->destroy('users/{userId}/todos/{todoId}', 'delete');
     });
 });
