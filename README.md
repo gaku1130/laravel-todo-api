@@ -36,7 +36,5 @@ Laravel Sanctumを使用して以下の認証機能を実装予定です：
     - セキュリティグループ
 - **EC2**
 - **EIP**
-
-## 追加予定のAWSリソース
 - **ACM**
 - **CloudFront**
