@@ -50,5 +50,5 @@ Route::controller(TodoController::class)->group(function () {
         'check.userId',
         'find.todo',
         'check.todoId',
-    ])->delete('users/{userId}/todos/{todoId}', 'destroy');
+    ])->delete('users/{userId}/todos/{todoId}', 'delete');
 });

@@ -1,130 +1,66 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\BaseController as BaseController;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\JsonResponse;
+use App\Exceptions\CustomException;
 
-
-
-class AuthController extends Controller
-{
-
-    public function register(Request $request)
-    {
-        try {
-            $validator = Validator::make($request->all(), [
-                'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users',
-                'password' => 'required|string|min:8',
-                'confirmPassword' => 'required|string|min:8|same:password',
-            ]);
-    
-            if ($validator->fails()) {
-                return response()->json([
-                    'error' => [
-                        'code' => 400,
-                        'message' => 'Request Parameter Error',
-                        'details' => $validator->errors()->first(),
-                    ],
-                ], 400);
-            }
-    
-            $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password), 
-            ]);
-    
-            $token = $user->createToken('AccessToken')->plainTextToken;
-    
-            return response()->json([
-                'status' => 201,
-                'data' => [
-                    'userId' => $user->id,
-                    'accessToken' => $token,
-                ],
-            ], 201);
-        } catch (\Exception $e) {
-            \Log::error('Register Error: ' . $e->getMessage());
-    
-            return response()->json([
-                'error' => [
-                    'code' => 500,
-                    'message' => 'Server Error',
-                    'details' => 'An unexpected error occurred on the server. Please try again later or contact support if the issue persists.',
-                ],
-            ], 500);
-        }
+class LoginController extends BaseController {
+  /**
+   * Login api
+   *
+   * @return \Illuminate\Http\Response
+   */
+  public function login(Request $request): JsonResponse {
+    if (!Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+      throw new CustomException('Request Parameter Error', "The provided email or password is incorrect. Please check your credentials and try again", 400);
     }
 
+    $user = Auth::user();
+    $data['token'] = $user->createToken('API Access')->plainTextToken;
+    $data['userId'] = $user->id;
 
+    return $this->sendResponse('data', $data, 200, 'User Login Successfully');
+  }
 
+    /**
+     * Logout api
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function logout(Request $request): JsonResponse {
+      $request->user()->currentAccessToken()->delete();
+  
+      return $this->sendResponse(null, null, 200, 'successfully logout');
+    }
+  
+     /**
+   * Register api
+   *
+   * @return \Illuminate\Http\Response
+   */
+  public function register(Request $request): JsonResponse {
+    $validator = Validator::make($request->all(), [
+      'name' => 'required',
+      'email' => 'required|email',
+      'password' => 'required',
+      'confirmPassword' => 'required|same:password'
+    ]);
 
-    public function login(Request $request)
-    {
-        try{
-            if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-                $user = Auth::user();
-                $token = Auth::user()->createToken('AccessToken')->plainTextToken;
-                return response()->json([
-                    'status' => 200,
-                    'data' => [
-                        'userId' => $user->id,
-                        'accessToken' => $token,
-                    ],
-                ], 200);
-            } else {
-                return response()->json([
-                    'error' => [
-                        'code' => 400,
-                            'message' => 'Request Parameter Error',
-                            'details' => 'The provided credentials are incorrect.',
-                    ],
-                ],400);
-            }
-        }catch(\Exception $e){
-            return response()->json([
-                'error' => [
-                    'code' => 500,
-                    'message' => 'Server Error',
-                    'details' => 'An unexpected error occurred on the server. Please try again later or contact support if the issue persists.',
-                ],
-            ], 500);
-        }
+    if ($validator->fails()) {
+      throw new CustomException('Validation Error', $validator->errors(), 400);
     }
 
+    $input = $request->all();
+    $input['password'] = bcrypt($input['password']);
+    $user = User::create($input);
+    $data['accessToken'] = $user->createToken('API Access')->plainTextToken;
+    $data['userId'] = $user->id;
 
-
-    public function logout(Request $request)
-    {
-        try {
-            if (!Auth::check()) {
-                return response()->json([
-                    'error' => [
-                        'code' => 401,
-                        'message' => 'Authorization Error',
-                        'details' => 'User authentication failed. Please check your credentials and try again.',
-                    ],
-                ], 401);
-            }
-
-            $request->user()->currentAccessToken()->delete();
-
-            return response()->json([
-                'message' => 'successfully logout',
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'error' => [
-                    'code' => 500,
-                    'message' => 'Server Error',
-                    'details' => 'An unexpected error occurred on the server. Please try again later or contact support if the issue persists.',
-                ],
-            ], 500);
-        }
-    }
+    return $this->sendResponse('data', $data, 201, 'User Registeration successfully');
+  }
 }

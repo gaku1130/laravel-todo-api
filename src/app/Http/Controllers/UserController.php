@@ -1,56 +1,40 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\BaseController as BaseController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use App\Exceptions\CustomException;
+use Illuminate\Http\JsonResponse;
 
-class UserController extends Controller
-{
-    public function findUser(Request $request, $userId)
-    {
-        try {
-            if ($request->user()->id != $userId) {
-                return response()->json([
-                    'error' => [
-                        'code' => 403,
-                        'message' => 'Forbidden',
-                        'details' => 'You do not have permission to access this user resource.',
-                    ],
-                ], 403);
-            }
-    
-            $user = User::find($userId);
+class UserController extends BaseController {
+  private $user;
 
-            if (!$user) {
-                return response()->json([
-                    'error' => [
-                        'code' => 404,
-                        'message' => 'Not Found',
-                        'details' => 'The requested user resource was not found on the server.',
-                    ],
-                ], 404);
-            }
+  public function __construct(User $user)
+  {
+    $this->user = $user;
+  }
 
-            return response()->json([
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-            ], 200);
-        } catch (\Exception $e) {
-            \Log::error('Find User Error: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-    
-            return response()->json([
-                'error' => [
-                    'code' => 500,
-                    'message' => 'Server Error',
-                    'details' => 'An unexpected error occurred on the server. Please try again later or contact support if the issue persists.',
-                ],
-            ], 500);
-        }
-    }
+  /**
+   * find all users api
+   *
+   * @return \Illuminate\Http\Response
+   */
+  public function index(): JsonResponse
+  {
+    $users = $this->user->all();
+
+    return $this->sendResponse('users', $users, 200);
+  }
+
+  /**
+   * find user api
+   *
+   * @return \Illuminate\Http\Response
+   */
+  public function show(Request $request): JsonResponse
+  {
+    return $this->sendResponse('user', $request->user(), 200);
+  }
 }
