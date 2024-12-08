@@ -8,6 +8,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\JsonResponse;
 use App\Exceptions\CustomException;
+use Validator;
+
 
 class AuthController extends BaseController {
   /**
