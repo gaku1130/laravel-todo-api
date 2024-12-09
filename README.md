@@ -125,7 +125,7 @@ curl -X GET https://www.gaku-portfolio.com/api/v1/users/5/todos \
 
 - レスポンス
 ```
-{"status":200,"todos":[{"id":6,"user_id":5,"content":"todo\u306e\u65b0\u898f\u4f5c\u6210\u30c6\u30b9\u30c8","completed":0,"created_at":"2024-12-08T07:38:55.000000Z","updated_at":"2024-12-08T07:38:55.000000Z"},{"id":7,"user_id":5,"content":"todo\u306e\u65b0\u898f\u4f5c\u6210\u30c6\u30b9\u30c8","completed":0,"created_at":"2024-12-08T07:39:38.000000Z","updated_at":"2024-12-08T07:39:38.000000Z"}]}
+{"status":200,"todos":[{"id":6,"user_id":5,"content":"Test creating a new TODO item","completed":0,"created_at":"2024-12-08T07:38:55.000000Z","updated_at":"2024-12-08T07:38:55.000000Z"},{"id":7,"user_id":5,"content":"Test creating a new TODO item","completed":0,"created_at":"2024-12-08T07:39:38.000000Z","updated_at":"2024-12-08T07:39:38.000000Z"}]}
 ```
 
 ### todo詳細取得
@@ -139,7 +139,7 @@ curl -X GET https://www.gaku-portfolio.com/api/v1/users/5/todos/6 \
 
 - レスポンス
 ```
-{"status":200,"todo":{"id":6,"user_id":5,"content":"todo\u306e\u65b0\u898f\u4f5c\u6210\u30c6\u30b9\u30c8","completed":0,"created_at":"2024-12-08T07:38:55.000000Z","updated_at":"2024-12-08T07:38:55.000000Z"}}
+{"status":200,"todo":{"id":6,"user_id":5,"content":"Test creating a new TODO item","completed":0,"created_at":"2024-12-08T07:38:55.000000Z","updated_at":"2024-12-08T07:38:55.000000Z"}}
 ```
 
 
