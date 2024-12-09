@@ -26,19 +26,6 @@ Laravel Sanctumを使用して以下の認証機能を実装予定です：
 - **Todoの更新 (Update)**  
 - **Todoの削除 (Delete)**  
 
-## AWSで利用しているリソース
-- **Route53**
-- **VPC**
-    - インターネットゲートウェイ
-    - アベイラビリティーゾーン
-    - サブネット
-    - ルートテーブル
-    - セキュリティグループ
-- **EC2**
-- **EIP**
-- **ACM**
-- **CloudFront**
-
 
 ## APIの利用の仕方
 
@@ -188,3 +175,20 @@ curl -X DELETE https://www.gaku-portfolio.com/api/v1/users/5/todos/6 \
 ```
 {"status":200,"message":"Delete user`s todo successfully"}
 ```
+
+
+## AWSで利用しているリソース
+- **Route53**
+- **VPC**
+    - インターネットゲートウェイ
+    - アベイラビリティーゾーン
+    - サブネット
+    - ルートテーブル
+    - セキュリティグループ
+- **EC2**
+- **EIP**
+- **ACM**
+- **CloudFront**
+
+### AWS構成図
+<img src="./readme/TodoPortfolio.jpg" alt="Todoポートフォリオ" style="width: 1000px; height: auto;">
