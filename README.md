@@ -105,7 +105,7 @@ curl -X POST https://www.gaku-portfolio.com/api/v1/users/5/todos \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <access_token>" \
 -d '{
-  "content": "todoの新規作成テスト"
+  "content": "Test creating a new TODO item"
 }'
 ```
 
