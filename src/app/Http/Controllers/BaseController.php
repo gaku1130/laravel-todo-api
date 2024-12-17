@@ -24,7 +24,7 @@ class BaseController extends Controller {
       $response['message'] = $message;
     }
 
-    return response()->json($response, $status);
+    return response()->json($response, $status, [], JSON_UNESCAPED_UNICODE);
   }
 
   /**
